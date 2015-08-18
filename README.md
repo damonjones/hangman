@@ -5,6 +5,7 @@ In this assignment we ask you to implement a minimal version of a hangman API us
 
 ##Start a new game
 POST: /games
+
 At the start of the game a random word should be picked from this list.
 
 
