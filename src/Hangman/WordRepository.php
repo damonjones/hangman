@@ -2,6 +2,6 @@
 
 namespace Hangman;
 
-class WordRepository
+final class WordRepository
 {
 }

@@ -4,18 +4,17 @@ namespace Hangman;
 
 use Assert\Assertion as Assert;
 use Assert\AssertionFailedException;
-
 use Hangman\Exception\Game\InvalidGuessException;
 use Hangman\Exception\Game\LetterAlreadyGuessedException;
 use Hangman\Exception\Game\TooManyGuessesException;
 
 final class Game
 {
-    const NUMBER_OF_GUESSES = 11;
+    const NUMBER_OF_GUESSES   = 11;
     const UNGUESSED_CHARACTER = '.';
 
-    const BUSY = 'busy';
-    const FAIL = 'fail';
+    const BUSY    = 'busy';
+    const FAIL    = 'fail';
     const SUCCESS = 'success';
 
     /**
