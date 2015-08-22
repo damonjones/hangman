@@ -2,14 +2,15 @@
 
 namespace spec\Hangman;
 
-use Hangman\Exception\Game\InvalidGuessException;
-use Hangman\Exception\Game\LetterAlreadyGuessedException;
-use Hangman\Exception\Game\TooManyGuessesException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use Hangman\Game;
 use Hangman\Word;
+
+use Hangman\Exception\Game\InvalidGuessException;
+use Hangman\Exception\Game\LetterAlreadyGuessedException;
+use Hangman\Exception\Game\GameOverException;
 
 class GameSpec extends ObjectBehavior
 {
@@ -64,13 +65,6 @@ class GameSpec extends ObjectBehavior
         $this->shouldThrow(InvalidGuessException::class)->duringGuess('ab');
     }
 
-    function it_should_throw_an_exception_when_guessing_a_letter_after_the_maximum_number_of_tries_has_been_reached()
-    {
-        $this->guessIncorrectlyTheMaximumNumberOfTimes();
-
-        $this->shouldThrow(TooManyGuessesException::class)->duringGuess('z');
-    }
-
     function it_should_return_a_busy_status_when_the_game_has_started()
     {
         $this->status()->shouldReturn(Game::BUSY);
@@ -92,6 +86,22 @@ class GameSpec extends ObjectBehavior
         $this->status()->shouldReturn(Game::SUCCESS);
     }
 
+    function it_should_throw_an_exception_when_guessing_after_the_game_has_ended_with_a_fail()
+    {
+        $this->guessIncorrectlyTheMaximumNumberOfTimes();
+
+        $this->shouldThrow(GameOverException::class)->duringGuess('q');
+    }
+
+    function it_should_throw_an_exception_when_guessing_after_the_game_has_ended_with_a_success()
+    {
+        foreach (array_unique(str_split(self::VALID_WORD)) as $letter) {
+            $this->guess($letter);
+        }
+
+        $this->shouldThrow(GameOverException::class)->duringGuess('q');
+    }
+
     function it_should_be_able_to_represent_the_word_with_only_the_correct_guesses_shown()
     {
         $this->guess('a');
@@ -109,7 +119,7 @@ class GameSpec extends ObjectBehavior
             Game::UNGUESSED_CHARACTER
         ]);
 
-        $this->word()->shouldReturn($representation);
+        $this->obfuscatedWord()->shouldReturn($representation);
     }
 
     /**

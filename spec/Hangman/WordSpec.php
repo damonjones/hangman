@@ -6,6 +6,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use Hangman\Word;
+
 use Hangman\Exception\Word\InvalidCharactersException;
 use Hangman\Exception\Word\InvalidLengthException;
 
