@@ -4,9 +4,10 @@ namespace spec\Hangman;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Hangman\WordRepository;
 
-class WordRepositorySpec extends ObjectBehavior
+use Hangman\InMemoryWordRepository;
+
+class InMemoryWordRepositorySpec extends ObjectBehavior
 {
     function let()
     {
@@ -14,6 +15,6 @@ class WordRepositorySpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(WordRepository::class);
+        $this->shouldHaveType(InMemoryWordRepository::class);
     }
 }

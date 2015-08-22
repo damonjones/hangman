@@ -6,9 +6,9 @@ use Assert\Assertion as Assert;
 use Assert\AssertionFailedException;
 use Hangman\Exception\Game\InvalidGuessException;
 use Hangman\Exception\Game\LetterAlreadyGuessedException;
-use Hangman\Exception\Game\TooManyGuessesException;
+use Hangman\Exception\Game\GameOverException;
 
-final class Game
+class Game implements GameInterface
 {
     const NUMBER_OF_GUESSES   = 11;
     const UNGUESSED_CHARACTER = '.';
@@ -18,36 +18,36 @@ final class Game
     const SUCCESS = 'success';
 
     /**
-     * @var Word
+     * @var WordInterface
      */
-    private $word;
+    protected $word;
 
     /**
      * @var array
      */
-    private $guessedLetters = [];
+    protected $guessedLetters = [];
 
     /**
      * @var int
      */
-    private $guessesRemaining = self::NUMBER_OF_GUESSES;
+    protected $guessesRemaining = self::NUMBER_OF_GUESSES;
 
     /**
-     * @param string $word
+     * @param WordInterface $word
      */
-    private function __construct($word)
+    private function __construct(WordInterface $word)
     {
         $this->word = $word;
     }
 
     /**
-     * @param string $word
+     * @param WordInterface $word
      *
-     * @return Game
+     * @return GameInterface
      */
-    public static function withWord($word)
+    public static function withWord(WordInterface $word)
     {
-        return new Game($word);
+        return new static($word);
     }
 
     /**
@@ -63,7 +63,7 @@ final class Game
      */
     public function guess($letter)
     {
-        $this->guardTooManyGuesses();
+        $this->guardGameOver();
 
         $letter = strtolower($letter);
 
@@ -88,9 +88,19 @@ final class Game
     }
 
     /**
-     * @return string
+     * Get the word of the Game
+     *
+     * @return WordInterface
      */
     public function word()
+    {
+        return $this->word;
+    }
+
+    /**
+     * @return string
+     */
+    public function obfuscatedWord()
     {
         return str_replace(            // Replace
             array_diff(                // the unguessed letters - which is the difference of
@@ -103,12 +113,12 @@ final class Game
     }
 
     /**
-     * @throws TooManyGuessesException
+     * @throws GameOverException
      */
-    private function guardTooManyGuesses()
+    private function guardGameOver()
     {
-        if (!$this->guessesRemaining()) {
-            throw new TooManyGuessesException('You have already reached the maximum number of guesses.');
+        if (self::BUSY !== $this->status()) {
+            throw new GameOverException('This game has already ended.');
         }
     }
 

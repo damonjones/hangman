@@ -7,13 +7,13 @@ use Assert\AssertionFailedException;
 use Hangman\Exception\Word\InvalidLengthException;
 use Hangman\Exception\Word\InvalidCharactersException;
 
-final class Word
+class Word implements WordInterface
 {
     const MINIMUM_LENGTH = 3;
     const MAXIMUM_LENGTH = 11;
 
     /** @var string */
-    private $value;
+    protected $value;
 
     /**
      * @param string $value
@@ -35,7 +35,7 @@ final class Word
      */
     public static function fromString($value)
     {
-        return new self($value);
+        return new static($value);
     }
 
     /**
