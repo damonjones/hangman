@@ -1,6 +1,6 @@
 <?php
 
-namespace Qandidate\Common\Symfony\HttpKernel\EventListener;
+namespace AppBundle\Listener;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,11 +15,11 @@ class JsonRequestTransformerListener
     {
         $request = $event->getRequest();
 
-        if (! $this->isJsonRequest($request)) {
+        if (!$this->isJsonRequest($request)) {
             return;
         }
 
-        if (! $this->transformJsonBody($request)) {
+        if (!$this->transformJsonBody($request)) {
             $response = Response::create('Unable to parse request.', Response::HTTP_BAD_REQUEST);
             $event->setResponse($response);
         }
