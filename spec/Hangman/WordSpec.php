@@ -30,12 +30,6 @@ class WordSpec extends ObjectBehavior
         $this->shouldThrow(InvalidLengthException::class)->duringInstantiation();
     }
 
-    function it_should_throw_an_exception_when_constructed_with_an_empty_string()
-    {
-        $this->beConstructedThrough('fromString', ['']);
-        $this->shouldThrow(InvalidLengthException::class)->duringInstantiation();
-    }
-
     function it_should_throw_an_exception_when_constructed_with_a_word_that_is_too_short()
     {
         $this->beConstructedThrough('fromString', [str_repeat('a', Word::MINIMUM_LENGTH - 1)]);
