@@ -22,7 +22,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "beberlei/assert": "^2.3",
         "ramsey/uuid": "^2.8",
-        "phpspec/phpspec": "~2.3@beta"
+        "phpspec/phpspec": "~2.3@beta",
+        "phpunit/phpunit": "4.8.*"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
