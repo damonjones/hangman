@@ -2,9 +2,6 @@
 
 namespace Hangman;
 
-/**
- * InMemoryWordRepository
- */
 final class InMemoryWordRepository implements WordRepositoryInterface
 {
     /**
