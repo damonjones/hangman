@@ -27,18 +27,19 @@ final class ApiController extends Controller
     {
         /** @var InMemoryWordRepository $wordRepository */
         $wordRepository = $this->get('word_repository');
-        $word = $wordRepository->pickARandomWord();
-        $wordEntity = Word::fromString($word->value());
+
+        /** @var Word $word */
+        $word = Word::fromWord($wordRepository->pickARandomWord());
 
         /** @var Game $game */
-        $game = Game::withWord($wordEntity);
+        $game = Game::withWord($word);
 
         try {
             $em = $this->getDoctrine()->getManager();
             $em->persist($game);
             $em->flush();
         } catch (\Exception $e) {
-            return $this->errorResponse($e);
+            throw $e;
         }
 
         $nextUrl = $this->generateUrl(
@@ -63,7 +64,6 @@ final class ApiController extends Controller
     /**
      * @Route("/game/{id}", name="guess")
      * @Method("PUT")
-     * @ParamConverter("game", class="AppBundle:Game")
      *
      * @param Request $request
      * @param Game    $game
@@ -78,7 +78,7 @@ final class ApiController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
         } catch (\Exception $e) {
-            return $this->errorResponse($e);
+            throw $e;
         }
 
         return new JsonResponse(
@@ -89,24 +89,6 @@ final class ApiController extends Controller
                     'status'     => $game->status()
                 ]
             ]
-        );
-    }
-
-    /**
-     * @param \Exception $e
-     *
-     * @return JsonResponse
-     */
-    private function errorResponse(\Exception $e)
-    {
-        return new JsonResponse(
-            [
-                'error' => [
-                    'code'    => $e->getCode(),
-                    'message' => $e->getMessage()
-                ]
-            ],
-            500
         );
     }
 }
